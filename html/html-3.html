@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Список закладок</h1>
+    <form id="bookmark-form">
+        <input type="text" id="bookmark-name" placeholder="Назва закладки" required>
+        <input type="url" id="bookmark-url" placeholder="URL закладки" required>
+        <button type="submit">Додати закладку</button>
+    </form>
+    <ul id="bookmark-list"></ul>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const bookmarkList = document.getElementById('bookmark-list');
+    const bookmarkForm = document.getElementById('bookmark-form');
+    let bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+
+    const displayBookmarks = () => {
+        bookmarkList.innerHTML = '';
+        bookmarks.forEach((bookmark, index) => {
+            const li = document.createElement('li');
+            li.className = 'bookmark-item';
+            li.innerHTML = `
+                <a href="${bookmark.url}" target="_blank">${bookmark.name}</a>
+                <button onclick="deleteBookmark(${index})">Видалити</button>
+            `;
+            bookmarkList.appendChild(li);
+        });
+    };
+
+    window.deleteBookmark = (index) => {
+        bookmarks.splice(index, 1);
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+        displayBookmarks();
+    };
+
+    bookmarkForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const bookmark = {
+            name: document.getElementById('bookmark-name').value,
+            url: document.getElementById('bookmark-url').value
+        };
+        bookmarks.push(bookmark);
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+        bookmarkForm.reset();
+        displayBookmarks();
+    });
+
+    displayBookmarks();
+});
+    </script>
+</body>
+</html>

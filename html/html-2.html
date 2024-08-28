@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Форма збереження даних</h1>
+    <form id="data-form">
+        <label for="username">Логін:</label>
+        <input type="text" id="username" required>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" required>
+        <button type="submit">Зберегти</button>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+
+    const savedUsername = localStorage.getItem('username');
+    const savedPassword = localStorage.getItem('password');
+    if (savedUsername && savedPassword) {
+        usernameInput.value = savedUsername;
+        passwordInput.value = savedPassword;
+    }
+
+    document.getElementById('data-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        localStorage.setItem('username', usernameInput.value);
+        localStorage.setItem('password', passwordInput.value);
+        alert('Дані збережено!');
+    });
+});
+    </script>
+</body>
+</html>

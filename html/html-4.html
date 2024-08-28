@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Контакти</h1>
+    <form id="contact-form">
+        <input type="text" id="first-name" placeholder="Ім'я" required>
+        <input type="text" id="last-name" placeholder="Прізвище" required>
+        <input type="tel" id="phone" placeholder="Телефон" required>
+        <input type="email" id="email" placeholder="Електронна пошта" required>
+        <button type="submit">Додати контакт</button>
+    </form>
+    <ul id="contact-list"></ul>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const contactList = document.getElementById('contact-list');
+    const contactForm = document.getElementById('contact-form');
+    let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+
+    const displayContacts = () => {
+        contactList.innerHTML = '';
+        contacts.forEach((contact, index) => {
+            const li = document.createElement('li');
+            li.className = 'contact-item';
+            li.innerHTML = `
+                ${contact.firstName} ${contact.lastName} - ${contact.phone} - ${contact.email}
+                <button onclick="deleteContact(${index})">Видалити</button>
+            `;
+            contactList.appendChild(li);
+        });
+    };
+
+    window.deleteContact = (index) => {
+        contacts.splice(index, 1);
+        localStorage.setItem('contacts', JSON.stringify(contacts));
+        displayContacts();
+    };
+
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const contact = {
+            firstName: document.getElementById('first-name').value,
+            lastName: document.getElementById('last-name').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value
+        };
+        contacts.push(contact);
+        localStorage.setItem('contacts', JSON.stringify(contacts));
+        contactForm.reset();
+        displayContacts();
+    });
+
+    displayContacts();
+});
+    </script>
+</body>
+</html>

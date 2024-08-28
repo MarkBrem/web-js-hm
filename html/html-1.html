@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список задач</title>
+</head>
+<body>
+    <h1>Список задач</h1>
+    <form id="todo-form">
+        <input type="text" id="new-task" placeholder="Введіть нову задачу" required>
+        <button type="submit">Додати задачу</button>
+    </form>
+    <ul id="task-list"></ul>
+
+    <script>document.addEventListener('DOMContentLoaded', () => {
+        const taskList = document.getElementById('task-list');
+        const todoForm = document.getElementById('todo-form');
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    
+        const displayTasks = () => {
+            taskList.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = 'task-item';
+                if (task.completed) {
+                    li.classList.add('completed');
+                }
+                li.textContent = task.text;
+                li.addEventListener('click', () => toggleTask(index));
+                taskList.appendChild(li);
+            });
+        };
+    
+        const toggleTask = (index) => {
+            tasks[index].completed = !tasks[index].completed;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            displayTasks();
+        };
+    
+        todoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newTaskInput = document.getElementById('new-task');
+            const newTask = {
+                text: newTaskInput.value,
+                completed: false
+            };
+            tasks.push(newTask);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            newTaskInput.value = '';
+            displayTasks();
+        });
+    
+        displayTasks();
+    });</script>
+</body>
+</html>
